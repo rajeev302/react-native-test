@@ -17,7 +17,19 @@ export default class HelloWorldApp extends Component {
             {key: 'John'},
             {key: 'Jillian'},
             {key: 'Jimmy'},
-            {key: 'Julie'}]} 
+            {key: 'first'},
+            {key: 'second'},
+            {key: 'third'},
+            {key: 'fourth'},
+            {key: 'fifth'},
+            {key: 'sixth'},
+            {key: 'seventh'},
+            {key: 'eight'},
+            {key: 'ninth'},
+            {key: 'tenth'}, 
+            {key: 'eleventh'},
+            {key: 'tweleveth'},
+            {key: 'thirteenth'}]} 
             renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}/>
       </View>
     );
@@ -27,7 +39,9 @@ export default class HelloWorldApp extends Component {
 const styles = StyleSheet.create({
   container: {
    flex: 1,
-   paddingTop: 22
+   paddingTop: 22,
+   justifyContent: "center",
+   alignItems: "center"
   },
   item: {
     padding: 10,
