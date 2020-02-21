@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, ActivityIndicator, Text, View, StyleSheet } from 'react-native';
+import { FlatList, ActivityIndicator, Text, View, StyleSheet, Button } from 'react-native';
 import { Video } from 'expo-av';
 import ViewPager from '@react-native-community/viewpager';
 
@@ -8,13 +8,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   viewPagerPrimaryChildView: {
-
+    backgroundColor: "#404040"
   },
   viewPagerSecondaryChildView: {
     flex: 1
   },
   videoParentView: {
-    flex: 4
+    flex: 4,
+    marginStart: 12,
+    marginEnd: 12,
   },
   videoTitleParentView: {
     flex: 2
@@ -24,17 +26,32 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   likeparentView: {
-    flex: 1
+    flex: 1,
+    marginEnd: 6,
+    marginStart: 12
   },
   shareParentView: {
-    flex: 1
+    flex: 1,
+    marginEnd: 12,
+    marginStart: 6
   },
   topCommentListParentView: {
     flex: 4
+  },
+  commentRow: {
+    marginStart: 12,
+    marginEnd: 12,
+    marginTop: 6,
+    marginBottom: 6,
+    paddingTop: 4,
+    paddingBottom: 4,
+    paddingStart: 4,
+    paddingEnd: 4,
+    backgroundColor: "#bbbbbb"
   }
 });
 
-export default class FetchExample extends React.Component<{}, { isLoading: boolean, dataSource: any[]}> {
+export default class FetchExample extends React.Component<{}, { isLoading: boolean, dataSource: any[] }> {
 
   constructor(props) {
     super(props);
@@ -42,56 +59,59 @@ export default class FetchExample extends React.Component<{}, { isLoading: boole
   }
 
   componentDidMount() {
-  return fetch('https://stumbler.com/apiv1/videos/')
-    .then((response) => response.json())
-    .then((responseJson) => {
-      console.log('getting data from fetch', responseJson)
-      this.setState({
-        isLoading: false,
-        dataSource: responseJson,
+    return fetch('https://stumbler.com/apiv1/videos/')
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log('getting data from fetch', responseJson)
+        this.setState({
+          isLoading: false,
+          dataSource: responseJson,
+        })
       })
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
+      .catch((error) => {
+        console.error(error);
+      });
+  }
   render() {
-
-    var viewPagerChildernContent = this.state.dataSource.map(function(data){
-    return <View style={styles.viewPagerPrimaryChildView}>
-          <View style={styles.viewPagerSecondaryChildView}>
-            <View style={styles.videoParentView}>
-              <Text>video parent layout comes here</Text>
-              <Video
-                source={{ uri: data.source }}
-                rate={1.0}
-                volume={1.0}
-                isMuted={false}
-                resizeMode="stretch"
-                shouldPlay
-                isLooping
-                style={{ width: 300, height: 300 }}
-              />
+    function onLikeButtonPressed() {
+      alert('like button pressed')
+    }
+    function onShareButtonPressed() {
+      alert('share button pressed')
+    }
+    var viewPagerChildernContent = this.state.dataSource.map(function (data) {
+      return <View style={styles.viewPagerPrimaryChildView}>
+        <View style={styles.viewPagerSecondaryChildView}>
+          <View style={styles.videoParentView}>
+            <Video
+              source={{ uri: data.source }}
+              rate={1.0}
+              volume={1.0}
+              isMuted={false}
+              resizeMode="stretch"
+              shouldPlay
+              isLooping
+              style={{ width: "auto", height: 300 }}
+            />
+          </View>
+          <View style={styles.videoTitleParentView}><Text>{data.title}</Text></View>
+          <View style={styles.likeShareParentView}>
+            <View style={styles.likeparentView}>
+              <Button onPress={onLikeButtonPressed} title="Like" />
             </View>
-            <View style={styles.videoTitleParentView}><Text>Video title comes here</Text></View>
-            <View style={styles.likeShareParentView}>
-              <View style={styles.likeparentView}>
-                <Text>Like text comes here</Text>
-              </View>
-              <View style={styles.shareParentView}>
-                <Text>Share text comes here</Text>
-              </View>
+            <View style={styles.shareParentView}>
+              <Button onPress={onShareButtonPressed} title="Share" />
             </View>
-            <View style={styles.topCommentListParentView}>
-              <Text>top comment list comes here</Text>
-              <FlatList
-          data={data.top_comments}
-          renderItem={({ item }) => <Text>{item.comment}</Text>}
-          keyExtractor={item => item.id.toString()}
-        />
-              </View>
+          </View>
+          <View style={styles.topCommentListParentView}>
+            <FlatList
+              data={data.top_comments}
+              renderItem={({ item }) => <View style={styles.commentRow}><Text>{item.comment}</Text></View>}
+              keyExtractor={item => item.id.toString()}
+            />
           </View>
         </View>
+      </View>
 
 
     })
@@ -112,68 +132,3 @@ export default class FetchExample extends React.Component<{}, { isLoading: boole
 
   }
 }
-
-
-
-
-// import React, { Component } from 'react';
-// import { Text, View } from 'react-native';
-
-// class Blink extends Component<{text: string}, {isShowingText: boolean}> {
-
-//   componentDidMount(){
-//     // Toggle the state every second
-//     setInterval(() => (
-//       this.setState(previousState => (
-//         { isShowingText: !previousState.isShowingText }
-//       ))
-//     ), 1000);
-//   }
-
-//   //state object
-//   state = { isShowingText: true };
-
-//   render() {
-//     if (!this.state.isShowingText) {
-//       return null;
-//     }
-
-//     return (
-//       <Text>{this.props.text}</Text>
-//     );
-//   }
-// }
-
-// export default class BlinkApp extends Component {
-//   render() {
-//     return (
-//       <View>
-//         <Blink text='I love to blink' />
-//         <Blink text='Yes blinking is so great' />
-//         <Blink text='Why did they ever take this out of HTML' />
-//         <Blink text='Look at me look at me look at me' />
-//       </View>
-//     );
-//   }
-// }
-
-
-{/* <FlatList
-          data={this.state.dataSource}
-          renderItem={({ item }) => <Text>{item.title}</Text>}
-          keyExtractor={item => item.id.toString()}
-        /> */}
-{/* <Video
-          source={{ uri: 'https://res.cloudinary.com/stumblercdn/video/upload/w_576,h_720,c_fit,br_2000k,vc_auto/v1581846837/H_510.mp4' }} 
-          rate={1.0}
-          volume={1.0}
-          isMuted={false}
-          resizeMode="cover"
-          shouldPlay
-          isLooping
-          style={{ width: 300, height: 300 }}
-        /> */}
-
-{/* <ViewPager style={styles.viewPager} initialPage={0}>
-          
-        </ViewPager> */}
